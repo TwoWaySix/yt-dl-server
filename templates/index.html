@@ -1,22 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>TwoWaySix - YouTube Downloader</title>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-    
-    <button onclick="test()">Click</button>
 
-    <form action="/download">
-      <label for="video-id">YouTube Video ID:</label><br>
-      <input type="text" id="video_id" name="video_id"><br>
-      <input type="submit" value="Submit">
-    </form>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>TwoWaySix - YouTube Downloader</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
 
-	<script src="index.js"></script>
-  </body>
+<body>
+  <div class="container">
+    <div class="mb-25">
+      <h2>Extract Audio from YouTube Video</h2>
+      <form action="/download/youtube"  target="dummyframe">
+        <label for="video-id">Video ID:</label>
+        <input type="text" id="video_id" name="video_id">
+        <input type="submit" value="Download">
+      </form>
+    </div>
+
+    <div class="mb-25">
+      <h2>All downloads:</h2>
+      <ul>
+        {%- for download in downloads %}
+        <li>
+          <a href="/downloads/{{download}}"  download="{{download}}">{{download}}</a>
+        </li>
+        {%- endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+
+  <script src="/static/js/index.js"></script>
+</body>
+
 </html>
