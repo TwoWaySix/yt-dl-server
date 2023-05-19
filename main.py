@@ -1,6 +1,6 @@
 from http.client import HTTPResponse
 from fastapi import FastAPI, BackgroundTasks, Request
-
+import os
 import uvicorn
 
 from fastapi.staticfiles import StaticFiles
@@ -9,9 +9,15 @@ from fastapi.responses import RedirectResponse
 
 from ytdl.download import (
     DOWNLOAD_DIRECTORY,
+    TEMP_DIRECTORY,
     download_audio,
     get_all_download_names,
 )
+
+if not DOWNLOAD_DIRECTORY.exists():
+    os.mkdir(DOWNLOAD_DIRECTORY)
+if not TEMP_DIRECTORY.exists():
+    os.mkdir(TEMP_DIRECTORY)
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -37,4 +43,4 @@ async def download_from_youtube(video_id: str, background_tasks: BackgroundTasks
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=80)

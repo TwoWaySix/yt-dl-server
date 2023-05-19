@@ -9,11 +9,6 @@ DOWNLOAD_DIRECTORY: Path = Path("./downloads")
 
 
 async def download_audio(video_id: str):
-    if not DOWNLOAD_DIRECTORY.exists():
-        os.mkdir(DOWNLOAD_DIRECTORY)
-    if not TEMP_DIRECTORY.exists():
-        os.mkdir(TEMP_DIRECTORY)
-
     url = f"https://www.youtube.com/watch?v={video_id}"
     yt = YouTube(url)
     temp_path = (

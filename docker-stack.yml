@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  server:
+    image: localhost:5000/yt-dl-server:latest
+    ports:
+      - "8030:80"
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [ node.hostname == dione ]
