@@ -2,27 +2,37 @@ from pathlib import Path
 from typing import List
 from pytube import YouTube
 import os
+import shutil
 
+TEMP_DIRECTORY: Path = Path("./temp")
 DOWNLOAD_DIRECTORY: Path = Path("./downloads")
 
 
 async def download_audio(video_id: str):
+    if not DOWNLOAD_DIRECTORY.exists():
+        os.mkdir(DOWNLOAD_DIRECTORY)
+    if not TEMP_DIRECTORY.exists():
+        os.mkdir(TEMP_DIRECTORY)
+
     url = f"https://www.youtube.com/watch?v={video_id}"
     yt = YouTube(url)
-    download_path = (
+    temp_path = (
         yt.streams.filter(progressive=True, file_extension="mp4")
         .order_by("resolution")
         .desc()
         .first()
-        .download(DOWNLOAD_DIRECTORY)
+        .download(TEMP_DIRECTORY)
     )
-    download_path = Path(download_path)
+    temp_path = Path(temp_path)
 
-    audio_path = download_path.parent.joinpath(f"{download_path.name}.mp3")
-    # TODO: Extract Audio
-    cmd = f'ffmpeg -y -i "{download_path}" -map 0:a -acodec libmp3lame "{audio_path}"'
+    audio_temp_path = TEMP_DIRECTORY.joinpath(f"{temp_path.name}.mp3")
+
+    cmd = f'ffmpeg -y -i "{temp_path}" -map 0:a -acodec libmp3lame "{audio_temp_path}"'
     os.system(cmd)
-    os.remove(download_path)
+    os.remove(temp_path)
+
+    audio_path = DOWNLOAD_DIRECTORY.joinpath(f"{audio_temp_path.name}")
+    shutil.move(audio_temp_path, audio_path)
 
 
 def get_all_download_names() -> List[str]:
